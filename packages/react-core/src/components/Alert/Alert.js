@@ -17,6 +17,8 @@ const propTypes = {
   className: PropTypes.string,
   /* Aria label used to indicate alert variant */
   label: PropTypes.string,
+  title: PropTypes.string,
+  action: PropTypes.bool,
   /** Adds alert variant styles */
   variant: PropTypes.oneOf(Object.keys(AlertVariant))
 };
@@ -25,21 +27,40 @@ const defaultProps = {
   children: '',
   className: '',
   label: '',
+  title: '',
+  action: false,
   variant: AlertVariant.success
 };
 
-const Alert = ({ children, className, label, variant, ...props }) => (
-  <alert
+const Alert = ({
+  children,
+  className,
+  label,
+  title,
+  action,
+  variant,
+  ...props
+}) => (
+  <div
     {...props}
-    aria-label={variant === AlertVariant.success ? label : null}
+    aria-label={label}
     className={css(
       styles.alert,
       getModifier(styles.modifiers, variant),
       className
     )}
   >
-    {children}
-  </alert>
+    <div className={css(styles.alertBody)}>
+      <h4 className={css(styles.alertTitle)}>
+        <span className="sr-only">{variant}</span>
+        {title}
+      </h4>
+      <p>{children}</p>
+      {Boolean(action) && (
+        <div className={css(styles.alertAction)}>{action}</div>
+      )}
+    </div>
+  </div>
 );
 
 Alert.propTypes = propTypes;
